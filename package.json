@@ -1,0 +1,14 @@
+{
+  "name": "india-spice-site",
+  "version": "1.0.0",
+  "description": "India Spice — coming soon page with B2B/B2C enquiry form, emailed via Gmail",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "nodemailer": "^6.9.14"
+  }
+}
