@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>India Spice — Coming Soon</title>
+<script>
+  // Applied before paint to avoid a flash of the wrong theme
+  (function(){
+    try{
+      var saved = localStorage.getItem('is-theme');
+      var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    }catch(e){}
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF;
+    --surface:#FFFFFF;
+    --text:#14140F;
+    --text-soft:#5B5B54;
+    --line:#E7E7E0;
+    --green:#2F7A1E;
+    --green-dark:#1E5713;
+    --green-tint:#EEF6EA;
+    --border-strong:#14140F;
+    --error:#B3261E;
+  }
+  html[data-theme="dark"]{
+    --bg:#121210;
+    --surface:#1B1B17;
+    --text:#F3F3EE;
+    --text-soft:#B4B4A9;
+    --line:#2E2E28;
+    --green:#4CAF3A;
+    --green-dark:#6BC85B;
+    --green-tint:#1E2B18;
+    --border-strong:#F3F3EE;
+    --error:#FF6B60;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{transition:background-color .2s ease;}
+  body{
+    font-family:'Poppins', sans-serif;
+    color:var(--text);
+    background:var(--bg);
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    display:flex; flex-direction:column;
+    transition:background-color .2s ease, color .2s ease;
+  }
+  h1,h2, .display{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    line-height:1.03;
+    letter-spacing:-0.01em;
+  }
+  a{text-decoration:none; color:inherit;}
+
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 48px;
+    border-bottom:1px solid var(--line);
+  }
+  .logo{display:flex; align-items:center; gap:12px;}
+  .logo .badge{
+    width:44px; height:44px; border-radius:50%;
+    background:var(--green); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Baloo 2', sans-serif; font-weight:700; font-size:16px;
+    border:3px solid var(--border-strong);
+  }
+  .logo .wordmark .top{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:19px; letter-spacing:0.02em;}
+
+  .theme-toggle{
+    width:44px; height:44px; border-radius:50%;
+    border:2px solid var(--line); background:var(--surface);
+    cursor:pointer; font-size:18px;
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .theme-toggle:hover{border-color:var(--green); transform:translateY(-1px);}
+
+  main{
+    flex:1; padding:64px 24px 80px; position:relative; overflow:hidden;
+    display:flex; justify-content:center;
+  }
+  .glow{
+    position:absolute; width:560px; height:560px; border-radius:50%;
+    background:var(--green-tint);
+    top:-120px; left:50%; transform:translateX(-50%);
+    z-index:0;
+  }
+  .content{position:relative; z-index:1; max-width:640px; width:100%; text-align:center;}
+  .eyebrow{
+    display:inline-block; font-size:12px; font-weight:700; letter-spacing:0.22em;
+    color:var(--green); margin-bottom:18px;
+  }
+  h1{font-size:52px; margin-bottom:16px;}
+  h1 .accent{color:var(--green);}
+  .sub{
+    font-size:16px; color:var(--text-soft); line-height:1.7; margin-bottom:44px;
+    max-width:480px; margin-left:auto; margin-right:auto;
+  }
+
+  /* ENQUIRY CARD */
+  .enquiry-card{
+    background:var(--surface); border:2px solid var(--border-strong); border-radius:28px;
+    padding:40px; text-align:left;
+    transition:background-color .2s ease, border-color .2s ease;
+  }
+  .enquiry-card h2{font-size:24px; margin-bottom:6px;}
+  .enquiry-card .card-sub{font-size:13px; color:var(--text-soft); margin-bottom:28px;}
+
+  .field{margin-bottom:20px;}
+  .field label{
+    display:block; font-size:12px; font-weight:700; letter-spacing:0.05em;
+    color:var(--text); margin-bottom:8px;
+  }
+  .field input{
+    width:100%; border:2px solid var(--line); border-radius:14px;
+    padding:14px 16px; font-family:'Poppins', sans-serif; font-size:14px;
+    outline:none; transition:border-color .2s ease;
+    background:var(--bg); color:var(--text);
+  }
+  .field input:focus{border-color:var(--green);}
+  .field input::placeholder{color:var(--text-soft);}
+
+  /* B2B / B2C two-column selector */
+  .type-field label{margin-bottom:10px;}
+  .type-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .type-option{
+    position:relative;
+    border:2px solid var(--line); border-radius:16px;
+    padding:18px 16px; cursor:pointer; text-align:center;
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .type-option input{
+    position:absolute; opacity:0; inset:0; margin:0; cursor:pointer;
+  }
+  .type-option .type-icon{font-size:22px; margin-bottom:8px;}
+  .type-option .type-title{font-weight:700; font-size:14px; margin-bottom:4px;}
+  .type-option .type-desc{font-size:11px; color:var(--text-soft); line-height:1.4;}
+  .type-option:has(input:checked){
+    border-color:var(--green); background:var(--green-tint);
+  }
+  .type-option:has(input:checked) .type-title{color:var(--green-dark);}
+
+  .submit-btn{
+    width:100%; background:var(--green); color:#fff; border:none; border-radius:999px;
+    padding:16px 30px; font-weight:700; font-size:14px; letter-spacing:0.05em; cursor:pointer;
+    margin-top:8px; transition:background .2s ease;
+  }
+  .submit-btn:hover{background:var(--green-dark);}
+  .submit-btn:disabled{background:#a8c79e; cursor:not-allowed;}
+
+  .status-msg{
+    text-align:center; font-size:13px; font-weight:600; margin-top:16px; min-height:18px;
+  }
+  .status-msg.success{color:var(--green);}
+  .status-msg.error{color:var(--error);}
+
+  .spice-icons{
+    display:flex; justify-content:center; gap:14px; margin-top:44px; flex-wrap:wrap;
+  }
+  .spice-icons span{
+    width:52px; height:52px; border-radius:14px; background:var(--green-tint);
+    display:flex; align-items:center; justify-content:center; font-size:22px;
+  }
+
+  footer{
+    text-align:center; padding:24px; font-size:12px; color:var(--text-soft);
+    border-top:1px solid var(--line);
+  }
+
+  @media (max-width:600px){
+    header{padding:18px 20px;}
+    h1{font-size:34px;}
+    .enquiry-card{padding:26px;}
+    .type-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="/">
+    <div class="badge">IS</div>
+    <div class="wordmark">
+      <div class="top">INDIA SPICE</div>
+    </div>
+  </a>
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+</header>
+
+<main>
+  <div class="glow"></div>
+  <div class="content">
+    <span class="eyebrow">CURATED DISCOVERY</span>
+    <h1>Something's simmering<br><span class="accent">in the pantry.</span></h1>
+    <p class="sub">We're stone-grinding a brand new collection, sourced fresh from heritage farms across India. Leave your details and our team will reach out the moment we're ready.</p>
+
+    <form class="enquiry-card" id="enquiry-form">
+      <h2>Get in touch</h2>
+      <p class="card-sub">Tell us a little about you — we'll follow up before launch.</p>
+
+      <div class="field">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+      </div>
+
+      <div class="field">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+      </div>
+
+      <div class="field">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="+91 00000 00000" required>
+      </div>
+
+      <div class="field type-field">
+        <label>I'm enquiring as</label>
+        <div class="type-grid">
+          <label class="type-option">
+            <input type="radio" name="enquiryType" value="B2B" required>
+            <div class="type-icon">🏢</div>
+            <div class="type-title">B2B</div>
+            <div class="type-desc">Bulk orders, wholesale &amp; business partnerships</div>
+          </label>
+          <label class="type-option">
+            <input type="radio" name="enquiryType" value="B2C">
+            <div class="type-icon">🛍️</div>
+            <div class="type-title">B2C</div>
+            <div class="type-desc">Personal or household orders</div>
+          </label>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submit-btn">SUBMIT ENQUIRY</button>
+      <div class="status-msg" id="status-msg"></div>
+    </form>
+
+    <div class="spice-icons">
+      <span>🌿</span><span>🌶️</span><span>🥜</span><span>🌾</span><span>🥒</span><span>🫓</span>
+    </div>
+  </div>
+</main>
+
+<footer>© 2026 India Spice Heritage Pantry. All rights reserved.</footer>
+
+<script>
+  // Theme toggle
+  const themeToggle = document.getElementById('theme-toggle');
+  function updateToggleIcon(){
+    const theme = document.documentElement.getAttribute('data-theme');
+    themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+  }
+  updateToggleIcon();
+  themeToggle.addEventListener('click', function(){
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try{ localStorage.setItem('is-theme', next); }catch(e){}
+    updateToggleIcon();
+  });
+
+  // Enquiry form
+  const form = document.getElementById('enquiry-form');
+  const btn = document.getElementById('submit-btn');
+  const msg = document.getElementById('status-msg');
+
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    msg.className = 'status-msg';
+    msg.textContent = '';
+
+    const data = {
+      name: document.getElementById('name').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      enquiryType: form.querySelector('input[name="enquiryType"]:checked')
+        ? form.querySelector('input[name="enquiryType"]:checked').value
+        : ''
+    };
+
+    if(!data.name || !data.email || !data.phone || !data.enquiryType){
+      msg.textContent = 'Please fill in every field and choose an enquiry type.';
+      msg.classList.add('error');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'SUBMITTING...';
+
+    try{
+      const res = await fetch('/api/enquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json().catch(function(){ return {}; });
+
+      if(!res.ok) throw new Error(result.error || 'Request failed');
+
+      msg.textContent = "Thanks — check your inbox for confirmation. We'll be in touch soon.";
+      msg.classList.add('success');
+      form.reset();
+    }catch(err){
+      msg.textContent = 'Something went wrong. Please try again in a moment.';
+      msg.classList.add('error');
+    }finally{
+      btn.disabled = false;
+      btn.textContent = 'SUBMIT ENQUIRY';
+    }
+  });
+</script>
+
+<div id="sfcawbt3rhwrqdaw78pnndlad4tnjw1yrfn"></div><script type="text/javascript" src="https://counter11.optistats.ovh/private/counter.js?c=awbt3rhwrqdaw78pnndlad4tnjw1yrfn&down=async" async></script><noscript><a href="https://www.freecounterstat.com" title="free page counter"><img src="https://counter11.optistats.ovh/private/freecounterstat.php?c=awbt3rhwrqdaw78pnndlad4tnjw1yrfn" border="0" title="free page counter" alt="free page counter"></a></noscript>
+</body>
+</html>
